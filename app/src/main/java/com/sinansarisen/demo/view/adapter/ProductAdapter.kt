@@ -7,7 +7,7 @@ import com.bumptech.glide.Glide
 import com.sinansarisen.demo.databinding.AdapterProductBinding
 import com.sinansarisen.demo.service.model.Product
 
-class ProductAdapter: RecyclerView.Adapter<HorizontalProductViewHolder>() {
+class ProductAdapter: RecyclerView.Adapter<MainViewHolder>() {
 
     var products = mutableListOf<Product>()
 
@@ -16,14 +16,14 @@ class ProductAdapter: RecyclerView.Adapter<HorizontalProductViewHolder>() {
         notifyDataSetChanged()
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HorizontalProductViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MainViewHolder {
         val inflater = LayoutInflater.from(parent.context)
 
         val binding = AdapterProductBinding.inflate(inflater, parent, false)
-        return HorizontalProductViewHolder(binding)
+        return MainViewHolder(binding)
     }
 
-    override fun onBindViewHolder(holder: HorizontalProductViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: MainViewHolder, position: Int) {
         val product = products[position]
         holder.binding.name.text = product.name
         Glide.with(holder.itemView.context).load(product.imageUrl).into(holder.binding.imageview)

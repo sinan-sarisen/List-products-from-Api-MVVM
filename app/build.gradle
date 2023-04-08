@@ -52,7 +52,7 @@ dependencies {
 
     //ViewModel and livedata
     implementation "androidx.lifecycle:lifecycle-extensions:2.2.0"
-    
+
     //Retrofit
     implementation 'com.google.code.gson:gson:2.8.6'
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
@@ -67,5 +67,9 @@ dependencies {
 
     //CircleIndicator
     implementation 'me.relex:circleindicator:2.1.6'
+
+    //ViewPager2
+    implementation "androidx.viewpager2:viewpager2:1.0.0"
+
 
 }
