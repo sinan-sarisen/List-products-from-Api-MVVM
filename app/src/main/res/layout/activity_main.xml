@@ -18,7 +18,8 @@
         <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/viewPager2_"
             android:layout_width="match_parent"
-            android:layout_height="200dp"/>
+            android:layout_height="200dp"
+            android:layout_margin="4dp"/>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerview"
