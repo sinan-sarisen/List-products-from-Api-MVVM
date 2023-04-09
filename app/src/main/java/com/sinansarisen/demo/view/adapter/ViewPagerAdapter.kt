@@ -7,8 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.sinansarisen.demo.databinding.HorizontalItemHolderBinding
 import com.sinansarisen.demo.service.model.HorizontalProduct
-import com.sinansarisen.demo.service.model.Product
-import com.sinansarisen.demo.view.ui.toPrice
+import com.sinansarisen.demo.utils.toPrice
 
 class ViewPagerAdapter(
     private val context: Context,

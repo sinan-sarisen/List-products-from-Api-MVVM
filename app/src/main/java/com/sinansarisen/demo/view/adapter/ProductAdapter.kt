@@ -8,7 +8,7 @@ import com.bumptech.glide.Glide
 import com.sinansarisen.demo.databinding.AdapterProductBinding
 import com.sinansarisen.demo.service.model.Product
 import com.sinansarisen.demo.service.repository.ProductItemClickListener
-import com.sinansarisen.demo.view.ui.toPrice
+import com.sinansarisen.demo.utils.toPrice
 import com.sinansarisen.demo.viewmodel.MainViewModel
 
 class ProductAdapter(private var listener: ProductItemClickListener): RecyclerView.Adapter<MainViewHolder>() {
@@ -37,7 +37,7 @@ class ProductAdapter(private var listener: ProductItemClickListener): RecyclerVi
 
     override fun onBindViewHolder(holder: MainViewHolder, position: Int) {
         val product = products[position]
-        holder.binding.name.text = product.name
+        holder.binding.productName.text = product.name
         holder.binding.price.text = product.price.toPrice('₺')
         Glide.with(holder.itemView.context).load(product.imageUrl).into(holder.binding.imageview)
 

@@ -3,10 +3,7 @@ package com.sinansarisen.demo.viewmodel
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.sinansarisen.demo.service.model.HorizontalProduct
-import com.sinansarisen.demo.service.model.Product
-import com.sinansarisen.demo.service.model.ProductDetailResponse
-import com.sinansarisen.demo.service.model.ProductResponse
+import com.sinansarisen.demo.service.model.*
 import com.sinansarisen.demo.service.repository.MainRepository
 import com.sinansarisen.demo.service.repository.RetrofitService
 import retrofit2.Call
@@ -17,6 +14,7 @@ class MainViewModel constructor(private val repository: MainRepository)  : ViewM
 
     val productList = MutableLiveData<List<Product>>()
     val horizontalProductList = MutableLiveData<List<HorizontalProduct>>()
+    val productDetailData = MutableLiveData<ResultDetails>()
     val errorMessage = MutableLiveData<String>()
 
     fun getAllProducts() {
@@ -44,7 +42,6 @@ class MainViewModel constructor(private val repository: MainRepository)  : ViewM
     }
 
     fun getProductDetail(code: String) {
-
         repository.getProductDetail(code).enqueue(object : Callback<ProductDetailResponse> {
             override fun onResponse(
                 call: Call<ProductDetailResponse>,
@@ -54,7 +51,7 @@ class MainViewModel constructor(private val repository: MainRepository)  : ViewM
                     val productResponse = response.body()
                     productResponse?.let {
                         val productDetails = it.result
-
+                        productDetailData.postValue(productDetails)
                     }
                 }
             }

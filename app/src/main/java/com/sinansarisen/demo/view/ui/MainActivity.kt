@@ -1,5 +1,6 @@
 package com.sinansarisen.demo.view.ui
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
@@ -9,6 +10,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import com.sinansarisen.demo.*
 import com.sinansarisen.demo.databinding.ActivityMainBinding
+import com.sinansarisen.demo.service.model.ResultDetails
 import com.sinansarisen.demo.service.repository.MainRepository
 import com.sinansarisen.demo.service.repository.ProductItemClickListener
 import com.sinansarisen.demo.service.repository.RetrofitService
@@ -55,6 +57,15 @@ class MainActivity : AppCompatActivity(), ProductItemClickListener {
 
         })
 
+        viewModel.productDetailData.observe(this, Observer {
+            Log.d(TAG, "onCreate: $it")
+            val intent = Intent(this, ProductDetailActivity::class.java).apply {
+                putExtra("resultDetails", it)
+            }
+            startActivity(intent)
+
+        })
+
         viewModel.errorMessage.observe(this, Observer {
 
         })
@@ -65,19 +76,4 @@ class MainActivity : AppCompatActivity(), ProductItemClickListener {
         viewModel.getProductDetail(code)
     }
 
-}
-
-fun Double.toPrice(currency: Char): String? {
-    var locale: Locale? = null
-    if (currency == '₺' || currency == '€') {
-        locale = Locale("fr", "FR")
-    } else {
-        locale = Locale("en", "EN")
-    } //Add locales as per need.
-    val sym = DecimalFormatSymbols(locale)
-    sym.groupingSeparator = '.'
-    val decimalFormat: DecimalFormat = NumberFormat.getNumberInstance(locale) as DecimalFormat
-    decimalFormat.applyPattern("$currency ##,###.00")
-    decimalFormat.decimalFormatSymbols = sym
-    return decimalFormat.format(this)
 }
