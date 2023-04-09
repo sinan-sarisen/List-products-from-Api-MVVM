@@ -15,6 +15,8 @@
         android:usesCleartextTraffic="true"
         android:theme="@style/Theme.demo">
         <activity android:name="com.sinansarisen.demo.view.ui.MainActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            android:screenOrientation="fullSensor"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

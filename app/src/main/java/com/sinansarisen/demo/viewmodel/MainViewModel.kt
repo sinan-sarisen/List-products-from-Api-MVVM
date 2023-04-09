@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.sinansarisen.demo.service.model.HorizontalProduct
 import com.sinansarisen.demo.service.model.Product
+import com.sinansarisen.demo.service.model.ProductDetailResponse
 import com.sinansarisen.demo.service.model.ProductResponse
 import com.sinansarisen.demo.service.repository.MainRepository
 import com.sinansarisen.demo.service.repository.RetrofitService
@@ -41,4 +42,28 @@ class MainViewModel constructor(private val repository: MainRepository)  : ViewM
             }
         })
     }
+
+    fun getProductDetail(code: String) {
+
+        repository.getProductDetail(code).enqueue(object : Callback<ProductDetailResponse> {
+            override fun onResponse(
+                call: Call<ProductDetailResponse>,
+                response: Response<ProductDetailResponse>,
+            ) {
+                if (response.isSuccessful) {
+                    val productResponse = response.body()
+                    productResponse?.let {
+                        val productDetails = it.result
+
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call<ProductDetailResponse>, t: Throwable) {
+                Log.e("MainViewModel", "Error fetching product's detail", t)
+            }
+
+        })
+    }
 }
+

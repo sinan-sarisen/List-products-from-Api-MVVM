@@ -1,31 +1,34 @@
 package com.sinansarisen.demo.view.ui
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import androidx.core.content.ContentProviderCompat.requireContext
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.viewpager.widget.ViewPager
+import androidx.recyclerview.widget.GridLayoutManager
 import com.sinansarisen.demo.*
 import com.sinansarisen.demo.databinding.ActivityMainBinding
-import com.sinansarisen.demo.service.model.HorizontalProduct
 import com.sinansarisen.demo.service.repository.MainRepository
+import com.sinansarisen.demo.service.repository.ProductItemClickListener
 import com.sinansarisen.demo.service.repository.RetrofitService
 import com.sinansarisen.demo.view.adapter.ProductAdapter
 import com.sinansarisen.demo.view.adapter.ViewPagerAdapter
 import com.sinansarisen.demo.viewmodel.MainViewModel
 import com.sinansarisen.demo.viewmodel.MyViewModelFactory
-import me.relex.circleindicator.CircleIndicator
+import java.text.DecimalFormat
+import java.text.DecimalFormatSymbols
+import java.text.NumberFormat
+import java.util.*
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), ProductItemClickListener {
     private val TAG = "MainActivity"
     private lateinit var binding: ActivityMainBinding
     lateinit var viewModel: MainViewModel
 
     private val retrofitService = RetrofitService.getInstance()
-    val adapter = ProductAdapter()
-    private var imagesModel:HorizontalProduct? = null
+    val adapter = ProductAdapter(this)
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,7 +39,8 @@ class MainActivity : AppCompatActivity() {
 
         viewModel = ViewModelProvider(this, MyViewModelFactory(MainRepository(retrofitService))).get(
             MainViewModel::class.java)
-
+        val layoutManager = GridLayoutManager(this, 2)
+        binding.recyclerview.layoutManager = layoutManager
         binding.recyclerview.adapter = adapter
 
         viewModel.productList.observe(this, Observer {
@@ -44,8 +48,12 @@ class MainActivity : AppCompatActivity() {
             adapter.setProductList(it)
         })
 
-        setupViewPager2()
+        viewModel.horizontalProductList.observe(this, Observer {
+            Log.d(TAG, "onCreate: $it")
+            binding.viewPager2.adapter = ViewPagerAdapter(this, it.toMutableList())
+            binding.indicator.setViewPager(this.binding.viewPager2)
 
+        })
 
         viewModel.errorMessage.observe(this, Observer {
 
@@ -53,15 +61,23 @@ class MainActivity : AppCompatActivity() {
         viewModel.getAllProducts()
     }
 
-    private fun setupViewPager2() {
-        val list: MutableList<String> = ArrayList()
-        list.add("This is your First Screen")
-        list.add("This is your Second Screen")
-        list.add("This is your Third Screen")
-        list.add("This is your Fourth Screen")
-
-        // Set adapter to viewPager.
-        binding.viewPager2.adapter = ViewPagerAdapter(this, list)
+    override fun onProductItemClick(code: String) {
+        viewModel.getProductDetail(code)
     }
 
+}
+
+fun Double.toPrice(currency: Char): String? {
+    var locale: Locale? = null
+    if (currency == '₺' || currency == '€') {
+        locale = Locale("fr", "FR")
+    } else {
+        locale = Locale("en", "EN")
+    } //Add locales as per need.
+    val sym = DecimalFormatSymbols(locale)
+    sym.groupingSeparator = '.'
+    val decimalFormat: DecimalFormat = NumberFormat.getNumberInstance(locale) as DecimalFormat
+    decimalFormat.applyPattern("$currency ##,###.00")
+    decimalFormat.decimalFormatSymbols = sym
+    return decimalFormat.format(this)
 }
